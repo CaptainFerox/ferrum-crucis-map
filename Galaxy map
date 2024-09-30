@@ -1,511 +1,399 @@
 <div id="galaxy-map">
-    <div id="sun"></div>
+<div id="sun"></div>
 </div>
 
 <div id="info-panel">
-    <button id="close-button">Close</button>
-    <h2 id="location-name"></h2>
-    <div id="location-info"></div>
-    <select id="faction-select">
-        <option value="">Select Faction</option>
-        <option value="Imperium">Imperium</option>
-        <option value="Chaos">Chaos</option>
-        <option value="Genestealer Cults">Genestealer Cults</option>
-        <option value="Orks">Orks</option>
-        <option value="Necrons">Necrons</option>
-        <option value="Tau">Tau</option>
-    </select>
-    <div id="battle-areas"></div>
-    <div id="ship-creation">
-        <h3>Create Ship</h3>
-        <select id="ship-faction-select">
-            <option value="Imperium">Imperium</option>
-            <option value="Chaos">Chaos</option>
-            <option value="Genestealer Cults">Genestealer Cults</option>
-            <option value="Orks">Orks</option>
-            <option value="Necrons">Necrons</option>
-            <option value="Tau">Tau</option>
-        </select>
-        <input type="text" id="ship-name" placeholder="Ship Name">
-        <button id="create-ship-button">Create Ship</button>
-    </div>
+<button id="close-button">Close</button>
+<h2 id="location-name"></h2>
+<div id="location-info-container">
+  <div id="location-info"></div>
+</div>
+<select id="faction-select">
+<option value="">Select Faction</option>
+<option value="Imperium">Imperium</option>
+<option value="Chaos">Chaos</option>
+<option value="Genestealer Cults">Genestealer Cults</option>
+<option value="Orks">Orks</option>
+<option value="Necrons">Necrons</option>
+<option value="Tau">Tau</option>
+</select>
+<div id="battle-areas"></div>
 </div>
 
 <div id="planet-popup" class="planet-popup">
-    <div class="planet-name"></div>
-    <div class="planet-info"></div>
+<div class="planet-name"></div>
+<div class="planet-info"></div>
 </div>
 
 <button id="open-ship-creation">Create Ship</button>
 
 <div id="event-log">
-    <h3>Event Log</h3>
-    <div id="event-list"></div>
+<h3>Event Log</h3>
+<div id="event-list"></div>
+</div>
+
+<div id="ship-creation-panel" class="panel">
+<h2>Create New Ship</h2>
+<input type="text" id="ship-name" placeholder="Enter ship name">
+<select id="ship-faction">
+<option value="">Select Faction</option>
+<option value="Imperium">Imperium</option>
+<option value="Chaos">Chaos</option>
+<option value="Genestealer Cults">Genestealer Cults</option>
+<option value="Orks">Orks</option>
+<option value="Necrons">Necrons</option>
+<option value="Tau">Tau</option>
+</select>
+<button id="create-ship-button">Create Ship</button>
 </div>
 
 <style>
-    #galaxy-map {
-        width: 100%;
-        height: 500px;
-        background-color: #000;
-        position: relative;
-        overflow: hidden;
-    }
-    .star {
-        position: absolute;
-        background-color: #fff;
-        border-radius: 50%;
-    }
-    .planet, .chaotic-void, .ship {
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: transform 0.3s;
-    }
-    .planet:hover, .chaotic-void:hover, .ship:hover {
-        transform: scale(1.2);
-    }
-    .chaotic-void {
-        background: radial-gradient(circle at 30% 30%, #ff0000, #000000);
-        box-shadow: 0 0 10px #ff0000;
-        overflow: visible;
-    }
-    .tentacle {
-        position: absolute;
-        background-color: #ff0000;
-        width: 2px;
-        height: 20px;
-        transform-origin: bottom center;
-        animation: tentacle-move 3s infinite ease-in-out;
-    }
-    @keyframes tentacle-move {
-        0%, 100% { transform: rotate(0deg); }
-        50% { transform: rotate(30deg); }
-    }
-    .ship {
-        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    }
-    #sun {
-        position: absolute;
-        width: 40px;
-        height: 40px;
-        background: radial-gradient(circle at 30% 30%, #ffff00, #ff8c00);
-        border-radius: 50%;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        box-shadow: 0 0 20px #ff8c00;
-    }
-    #info-panel {
-        display: none;
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        width: 300px;
-        background-color: rgba(0, 0, 0, 0.8);
-        color: #fff;
-        padding: 20px;
-        border-radius: 10px;
-    }
-    .planet-popup {
-        display: none;
-        position: absolute;
-        background-color: rgba(0, 0, 0, 0.8);
-        color: #fff;
-        padding: 10px;
-        border-radius: 5px;
-        z-index: 1000;
-    }
-    #event-log {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        width: 300px;
-        height: 200px;
-        background-color: rgba(0, 0, 0, 0.8);
-        color: #fff;
-        padding: 10px;
-        border-radius: 10px;
-        overflow-y: auto;
-    }
-    .event {
-        margin-bottom: 5px;
-    }
-    .chaos-controlled {
-        border: 2px solid #ff0000;
-        box-shadow: 0 0 10px #ff0000;
-    }
-    #ship-creation {
-        margin-top: 20px;
-    }
-    #ship-creation input, #ship-creation select, #ship-creation button {
-        margin-top: 5px;
-        width: 100%;
-    }
-    #open-ship-creation {
-        position: fixed;
-        bottom: 230px;
-        left: 20px;
-        width: 300px;
-        padding: 10px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-    #open-ship-creation:hover {
-        background-color: #45a049;
-    }
+#galaxy-map {
+  width: 100%;
+  height: 500px;
+  background-color: #000;
+  position: relative;
+  overflow: hidden;
+}
+
+.star {
+  position: absolute;
+  background-color: #fff;
+  border-radius: 50%;
+}
+
+.planet, .chaotic-void, .ship {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.planet:hover, .chaotic-void:hover, .ship:hover {
+  transform: scale(1.2);
+}
+
+.chaotic-void {
+  background: radial-gradient(circle at 30% 30%, #ff0000, #000000);
+  box-shadow: 0 0 10px #ff0000;
+}
+
+.ship {
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+#sun {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle at 30% 30%, #ffff00, #ff8c00);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 20px #ff8c00;
+}
+
+#info-panel, #ship-creation-panel {
+  display: none;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 300px;
+  height: 80vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  overflow-y: auto;
+}
+
+#location-info-container {
+  max-height: 30vh;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.planet-popup {
+  display: none;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1000;
+}
+
+#event-log {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 300px;
+  height: 200px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  overflow-y: auto;
+}
+
+.event {
+  margin-bottom: 5px;
+}
+
+.chaos-controlled {
+  border: 2px solid #ff0000;
+  box-shadow: 0 0 10px #ff0000;
+}
+
+#open-ship-creation {
+  position: fixed;
+  bottom: 230px;
+  left: 20px;
+  width: 300px;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#open-ship-creation:hover {
+  background-color: #45a049;
+}
+
+#ship-creation-panel input, #ship-creation-panel select, #ship-creation-panel button {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
 </style>
 
 <script>
-    const galaxyMap = document.getElementById('galaxy-map');
-    const infoPanel = document.getElementById('info-panel');
-    const locationName = document.getElementById('location-name');
-    const locationInfo = document.getElementById('location-info');
-    const factionSelect = document.getElementById('faction-select');
-    const closeButton = document.getElementById('close-button');
-    const battleAreas = document.getElementById('battle-areas');
-    const planetPopup = document.getElementById('planet-popup');
-    const eventList = document.getElementById('event-list');
-    const shipFactionSelect = document.getElementById('ship-faction-select');
-    const shipNameInput = document.getElementById('ship-name');
-    const createShipButton = document.getElementById('create-ship-button');
-    const openShipCreationButton = document.getElementById('open-ship-creation');
+const galaxyMap = document.getElementById('galaxy-map');
+const infoPanel = document.getElementById('info-panel');
+const locationName = document.getElementById('location-name');
+const locationInfo = document.getElementById('location-info');
+const factionSelect = document.getElementById('faction-select');
+const closeButton = document.getElementById('close-button');
+const battleAreas = document.getElementById('battle-areas');
+const planetPopup = document.getElementById('planet-popup');
+const eventList = document.getElementById('event-list');
+const openShipCreationButton = document.getElementById('open-ship-creation');
+const shipCreationPanel = document.getElementById('ship-creation-panel');
+const shipNameInput = document.getElementById('ship-name');
+const shipFactionSelect = document.getElementById('ship-faction');
+const createShipButton = document.getElementById('create-ship-button');
 
-    const locations = [
-        { name: "Ferrum Prime", radius: 120, angle: 0, speed: 0.0002, faction: "Imperium", color: "#1e90ff", type: "planet",
-          description: "Forge World and homeworld of Iron Hands successor Chapter. Features vast manufactorums and cybernetic enhancement facilities. Strategic importance due to production of war materiel.",
-          population: 15, resources: ["Adamantium", "Promethium"], defenses: 8 },
-        { name: "Sanctum Fidelis", radius: 180, angle: Math.PI / 2, speed: 0.00015, faction: "Imperium", color: "#ffd700", type: "planet",
-          description: "Shrine World controlled by the Adepta Sororitas. Home to several major cathedrals and the formidable Fortress-Convent of the Order of the Argent Shroud.",
-          population: 5, resources: ["Relics", "Holy artifacts"], defenses: 7 },
-        { name: "Edo-Hanami Secundus", radius: 220, angle: Math.PI, speed: 0.0001, faction: "Imperium", color: "#ff69b4", type: "planet",
-          description: "Homeworld of the Sakura Guard Regiment. Features a feudal society structure heavily influenced by ancient Terran Japanese culture.",
-          population: 2, resources: ["Advanced weaponry", "Exotic flora"], defenses: 6 },
-        { name: "Tenebris Secundus", radius: 280, angle: 3 * Math.PI / 2, speed: 0.00008, faction: "Genestealer Cults", color: "#8a2be2", type: "planet",
-          description: "Death World infested with Genestealer Cults. Dense jungles and subterranean hive complexes provide perfect cover for xenos infiltration.",
-          population: 1, resources: ["Toxic compounds", "Rare minerals"], defenses: 4 },
-        { name: "The Behemoth's Maw", radius: 150, angle: Math.PI / 4, speed: 0.00018, faction: "", color: "#a9a9a9", type: "planet",
-          description: "This massive conglomeration of derelict vessels and asteroids serves as a haven for pirates and renegades.",
-          population: 0.5, resources: ["Salvage", "Black market goods"], defenses: 3 },
-        { name: "Chaotic Void", radius: 200, angle: 5 * Math.PI / 4, speed: 0.00012, faction: "Chaos", color: "#ff0000", type: "void",
-          description: "Unstable region of space tainted by Chaos. Potential for void combat and boarding actions against Chaos warfleets." },
-        { name: "Tau Expedition Fleet", radius: 250, angle: 7 * Math.PI / 4, speed: 0.00009, faction: "Tau", color: "#4682b4", type: "ship",
-          description: "A Tau expedition fleet, led by the flagship 'Aun'El's Wisdom'. The fleet consists of several advanced battleships and is exploring the region for potential expansion of the Greater Good." }
-    ];
+const locations = [
+  { name: "Ferrum Prime", radius: 120, angle: 0, speed: 0.0002, faction: "Imperium", color: "#1e90ff", type: "planet",
+    description: "Forge World and homeworld of Iron Hands successor Chapter. Features vast manufactorums and cybernetic enhancement facilities. Strategic importance due to production of war materiel.",
+    population: 15, resources: ["Adamantium", "Promethium"], defenses: 8 },
+  { name: "Sanctum Fidelis", radius: 180, angle: Math.PI / 2, speed: 0.00015, faction: "Imperium", color: "#ffd700", type: "planet",
+    description: "Shrine World controlled by the Adepta Sororitas. Home to several major cathedrals and the formidable Fortress-Convent of the Order of the Argent Shroud.",
+    population: 5, resources: ["Relics", "Holy artifacts"], defenses: 7 },
+  { name: "Edo-Hanami Secundus", radius: 220, angle: Math.PI, speed: 0.0001, faction: "Imperium", color: "#ff69b4", type: "planet",
+    description: "Homeworld of the Sakura Guard Regiment. Features a feudal society structure heavily influenced by ancient Terran Japanese culture.",
+    population: 2, resources: ["Advanced weaponry", "Exotic flora"], defenses: 6 },
+  { name: "Tenebris Secundus", radius: 280, angle: 3 * Math.PI / 2, speed: 0.00008, faction: "Genestealer Cults", color: "#8a2be2", type: "planet",
+    description: "Death World infested with Genestealer Cults. Dense jungles and subterranean hive complexes provide perfect cover for xenos infiltration.",
+    population: 1, resources: ["Toxic compounds", "Rare minerals"], defenses: 4 },
+  { name: "The Behemoth's Maw", radius: 150, angle: Math.PI / 4, speed: 0.00018, faction: "", color: "#a9a9a9", type: "planet",
+    description: "This massive conglomeration of derelict vessels and asteroids serves as a haven for pirates and renegades.",
+    population: 0.5, resources: ["Salvage", "Black market goods"], defenses: 3 },
+  { name: "Chaotic Void", radius: 200, angle: 5 * Math.PI / 4, speed: 0.00012, faction: "Chaos", color: "#ff0000", type: "void",
+    description: "Unstable region of space tainted by Chaos. Potential for void combat and boarding actions against Chaos warfleets." },
+  { name: "Tau Expedition Fleet", radius: 250, angle: 7 * Math.PI / 4, speed: 0.00009, faction: "Tau", color: "#4682b4", type: "ship",
+    description: "A Tau expedition fleet, led by the flagship 'Aun'El's Wisdom'. The fleet consists of several advanced battleships and is exploring the region for potential expansion of the Greater Good." }
+];
 
-    function createStarfield() {
-        for (let i = 0; i < 200; i++) {
-            const star = document.createElement('div');
-            star.classList.add('star');
-            star.style.left = `${Math.random() * 100}%`;
-            star.style.top = `${Math.random() * 100}%`;
-            star.style.width = `${Math.random() * 2 + 1}px`;
-            star.style.height = star.style.width;
-            galaxyMap.appendChild(star);
-        }
+function createStarfield() {
+  for (let i = 0; i < 200; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    star.style.left = `${Math.random() * 100}%`;
+    star.style.top = `${Math.random() * 100}%`;
+    star.style.width = `${Math.random() * 2 + 1}px`;
+    star.style.height = star.style.width;
+    galaxyMap.appendChild(star);
+  }
+}
+
+function createLocations() {
+  locations.forEach(location => {
+    const locationElement = document.createElement('div');
+    locationElement.classList.add(location.type === 'planet' ? 'planet' :
+      location.type === 'void' ? 'chaotic-void' : 'ship');
+    if (location.type === 'planet') {
+      locationElement.style.backgroundColor = location.color;
+      locationElement.style.boxShadow = `0 0 10px ${location.color}, inset 0 0 20px rgba(0,0,0,0.5)`;
+    } else if (location.type === 'ship') {
+      locationElement.style.backgroundColor = location.color;
     }
+    locationElement.addEventListener('click', () => showLocationInfo(location));
+    locationElement.addEventListener('mouseover', (e) => showPlanetPopup(e, location));
+    locationElement.addEventListener('mouseout', hidePlanetPopup);
+    galaxyMap.appendChild(locationElement);
+    location.element = locationElement;
+  });
+}
 
-    function createLocations() {
-        locations.forEach(location => {
-            const locationElement = document.createElement('div');
-            locationElement.classList.add(location.type === 'planet' ? 'planet' : 
-                                           location.type === 'void' ? 'chaotic-void' : 'ship');
-            if (location.type === 'planet') {
-                locationElement.style.backgroundColor = location.color;
-                locationElement.style.boxShadow = `0 0 10px ${location.color}, inset 0 0 20px rgba(0,0,0,0.5)`;
-            } else if (location.type === 'ship') {
-                locationElement.style.backgroundColor = location.color;
-            } else if (location.type === 'void') {
-                createTentacles(locationElement);
-            }
-            locationElement.addEventListener('click', () => showLocationInfo(location));
-            locationElement.addEventListener('mouseover', (e) => showPlanetPopup(e, location));
-            locationElement.addEventListener('mouseout', hidePlanetPopup);
-            galaxyMap.appendChild(locationElement);
-            location.element = locationElement;
-        });
-    }
+function updateLocations() {
+  const centerX = galaxyMap.clientWidth / 2;
+  const centerY = galaxyMap.clientHeight / 2;
+  locations.forEach(location => {
+    location.angle += location.speed;
+    const x = centerX + location.radius * Math.cos(location.angle);
+    const y = centerY + location.radius * Math.sin(location.angle);
+    location.element.style.left = `${x}px`;
+    location.element.style.top = `${y}px`;
+  });
+  requestAnimationFrame(updateLocations);
+}
 
-    function createTentacles(voidElement) {
-        for (let i = 0; i < 8; i++) {
-            const tentacle = document.createElement('div');
-            tentacle.classList.add('tentacle');
-            tentacle.style.left = '50%';
-            tentacle.style.top = '50%';
-            tentacle.style.transform = `rotate(${i * 45}deg)`;
-            tentacle.style.animationDelay = `${i * 0.1}s`;
-            voidElement.appendChild(tentacle);
-        }
-    }
+function showPlanetPopup(event, location) {
+  if (location.type === 'planet' || location.type === 'ship') {
+    const planetName = planetPopup.querySelector('.planet-name');
+    const planetInfo = planetPopup.querySelector('.planet-info');
+    planetName.textContent = location.name;
+    planetInfo.innerHTML = `
+      <strong>Faction:</strong> ${location.faction || 'Unclaimed'}<br>
+      ${location.type === 'planet' ? `
+        <strong>Population:</strong> ${location.population} billion<br>
+        <strong>Resources:</strong> ${location.resources.join(', ')}<br>
+        <strong>Defenses:</strong> ${location.defenses}/10
+      ` : ''}
+    `;
+    planetPopup.style.display = 'block';
+    planetPopup.style.left = `${event.pageX + 10}px`;
+    planetPopup.style.top = `${event.pageY + 10}px`;
+  }
+}
 
-    function updateLocations() {
-        const centerX = galaxyMap.clientWidth / 2;
-        const centerY = galaxyMap.clientHeight / 2;
+function hidePlanetPopup() {
+  planetPopup.style.display = 'none';
+}
 
-        locations.forEach(location => {
-            location.angle += location.speed;
-            const x = centerX + location.radius * Math.cos(location.angle);
-            const y = centerY + location.radius * Math.sin(location.angle);
-            location.element.style.left = `${x}px`;
-            location.element.style.top = `${y}px`;
-        });
+function showLocationInfo(location) {
+  locationName.textContent = location.name;
+  locationInfo.innerHTML = `
+    <h3>Faction: ${location.faction || 'Unclaimed'}</h3>
+    <p>${location.description}</p>
+    ${location.type === 'planet' ? `
+      <p><strong>Population:</strong> ${location.population} billion</p>
+      <p><strong>Resources:</strong> ${location.resources.join(', ')}</p>
+      <p><strong>Defenses:</strong> ${location.defenses}/10</p>
+    ` : ''}
+  `;
+  factionSelect.value = location.faction;
+  factionSelect.onchange = () => {
+    location.faction = factionSelect.value;
+    showLocationInfo(location);
+  };
+  battleAreas.innerHTML = '';
+  for (let i = 1; i <= 6; i++) {
+    const battleArea = document.createElement('div');
+    battleArea.classList.add('battle-area');
+    battleArea.innerHTML = `
+      <h4>Area ${i}</h4>
+      <textarea placeholder="Describe the battle..."></textarea>
+    `;
+    battleAreas.appendChild(battleArea);
+  }
+  infoPanel.style.display = 'block';
+  shipCreationPanel.style.display = 'none';
+}
 
-        requestAnimationFrame(updateLocations);
-    }
+closeButton.addEventListener('click', () => {
+  infoPanel.style.display = 'none';
+});
 
-    function showPlanetPopup(event, location) {
-        if (location.type === 'planet' || location.type === 'ship') {
-            const planetName = planetPopup.querySelector('.planet-name');
-            const planetInfo = planetPopup.querySelector('.planet-info');
+function createShip() {
+  const shipName = shipNameInput.value.trim();
+  const shipFaction = shipFactionSelect.value;
 
-            planetName.textContent = location.name;
-            planetInfo.innerHTML = `
-                <strong>Faction:</strong> ${location.faction || 'Unclaimed'}<br>
-                ${location.type === 'planet' ? `
-                <strong>Population:</strong> ${location.population} billion<br>
-                <strong>Resources:</strong> ${location.resources.join(', ')}<br>
-                <strong>Defenses:</strong> ${location.defenses}/10
-                ` : ''}
-            `;
+  if (shipName && shipFaction) {
+    const newShip = {
+      name: shipName,
+      radius: Math.random() * 100 + 150,
+      angle: Math.random() * 2 * Math.PI,
+      speed: Math.random() * 0.0001 + 0.00005,
+      faction: shipFaction,
+      color: getColorForFaction(shipFaction),
+      type: "ship",
+      description: `A newly created ship of the ${shipFaction} faction.`
+    };
 
-            planetPopup.style.display = 'block';
-            planetPopup.style.left = `${event.pageX + 10}px`;
-            planetPopup.style.top = `${event.pageY + 10}px`;
-        }
-    }
+    locations.push(newShip);
+    const shipElement = document.createElement('div');
+    shipElement.classList.add('ship');
+    shipElement.style.backgroundColor = newShip.color;
+    shipElement.addEventListener('click', () => showLocationInfo(newShip));
+    shipElement.addEventListener('mouseover', (e) => showPlanetPopup(e, newShip));
+    shipElement.addEventListener('mouseout', hidePlanetPopup);
+    galaxyMap.appendChild(shipElement);
+    newShip.element = shipElement;
 
-    function hidePlanetPopup() {
-        planetPopup.style.display = 'none';
-    }
+    addEventToLog(`New ship "${shipName}" created for ${shipFaction} faction.`);
+    shipCreationPanel.style.display = 'none';
+    shipNameInput.value = '';
+    shipFactionSelect.value = '';
+  } else {
+    alert('Please enter a ship name and select a faction.');
+  }
+}
 
-    function showLocationInfo(location) {
-        locationName.textContent = location.name;
-        locationInfo.innerHTML = `
-            <h3>Faction: ${location.faction || 'Unclaimed'}</h3>
-            <p>${location.description}</p>
-            ${location.type === 'planet' ? `
-            <p><strong>Population:</strong> ${location.population} billion</p>
-            <p><strong>Resources:</strong> ${location.resources.join(', ')}</p>
-            <p><strong>Defenses:</strong> ${location.defenses}/10</p>
-            ` : ''}
-        `;
-        factionSelect.value = location.faction;
-        factionSelect.onchange = () => {
-            location.faction = factionSelect.value;
-            showLocationInfo(location);
-        };
+function getColorForFaction(faction) {
+  const factionColors = {
+    'Imperium': '#1e90ff',
+    'Chaos': '#ff0000',
+    'Genestealer Cults': '#8a2be2',
+    'Orks': '#32cd32',
+    'Necrons': '#40e0d0',
+    'Tau': '#4682b4'
+  };
+  return factionColors[faction] || '#ffffff';
+}
 
-        battleAreas.innerHTML = '';
-        for (let i = 1; i <= 6; i++) {
-            const battleArea = document.createElement('div');
-            battleArea.classList.add('battle-area');
-            battleArea.innerHTML = `
-                <h4>Area ${i}</h4>
-                <textarea placeholder="Describe the battle..."></textarea>
-                <select class="winner-select">
-                    <option value="">Select Winner</option>
-                    <option value="Imperium">Imperium</option>
-                    <option value="Chaos">Chaos</option>
-                    <option value="Genestealer Cults">Genestealer Cults</option>
-                    <option value="Orks">Orks</option>
-                    <option value="Necrons">Necrons</option>
-                    <option value="Tau">Tau</option>
-                </select>
-            `;
-            battleAreas.appendChild(battleArea);
+function addEventToLog(event) {
+  const eventElement = document.createElement('div');
+  eventElement.classList.add('event');
+  eventElement.textContent = event;
+  eventList.appendChild(eventElement);
+  eventList.scrollTop = eventList.scrollHeight;
+}
 
-            if (location.battles && location.battles[i]) {
-                battleArea.querySelector('textarea').value = location.battles[i].description;
-                battleArea.querySelector('.winner-select').value = location.battles[i].winner;
-            }
+openShipCreationButton.addEventListener('click', () => {
+  shipCreationPanel.style.display = 'block';
+  infoPanel.style.display = 'none';
+});
 
-            battleArea.querySelector('textarea').addEventListener('change', (e) => {
-                if (!location.battles) location.battles = {};
-                if (!location.battles[i]) location.battles[i] = {};
-                location.battles[i].description = e.target.value;
-            });
+createShipButton.addEventListener('click', createShip);
 
-            battleArea.querySelector('.winner-select').addEventListener('change', (e) => {
-                if (!location.battles) location.battles = {};
-                if (!location.battles[i]) location.battles[i] = {};
-                location.battles[i].winner = e.target.value;
-                updateLocationControl(location);
-                applyGameplayEffects(location, i);
-            });
-        }
-
-        infoPanel.style.display = 'block';
-    }
-
-    function updateLocationControl(location) {
-        const factionCounts = {};
-        let totalAreas = 0;
-
-        for (let i = 1; i <= 6; i++) {
-            if (location.battles && location.battles[i] && location.battles[i].winner) {
-                const winner = location.battles[i].winner;
-                factionCounts[winner] = (factionCounts[winner] || 0) + 1;
-                totalAreas++;
-            }
-        }
-
-        for (const [faction, count] of Object.entries(factionCounts)) {
-            if (count > 3) {
-                location.faction = faction;
-                factionSelect.value = faction;
-                locationInfo.innerHTML = `
-                    <h3>Faction: ${location.faction}</h3>
-                    <p>${location.description}</p>
-                    <p><strong>Control update:</strong> ${faction} now controls this location.</p>
-                `;
-                if (faction === "Chaos") {
-                    location.element.classList.add('chaos-controlled');
-                } else {
-                    location.element.classList.remove('chaos-controlled');
-                }
-                return;
-            }
-        }
-
-        if (totalAreas >= 4 && location.faction) {
-            location.faction = "";
-            factionSelect.value = "";
-            locationInfo.innerHTML = `
-                <h3>Faction: Contested</h3>
-                <p>${location.description}</p>
-                <p><strong>Control update:</strong> This location is now contested.</p>
-            `;
-            location.element.classList.remove('chaos-controlled');
-        }
-    }
-
-    function applyGameplayEffects(location, battleIndex) {
-        if (location.type !== 'planet') return;
-
-        const winner = location.battles[battleIndex].winner;
-        const effects = [];
-
-        // Population changes
-        const populationChange = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
-        location.population = Math.max(0, location.population + populationChange);
-        if (populationChange !== 0) {
-            effects.push(`Population ${populationChange > 0 ? 'increased' : 'decreased'} by ${Math.abs(populationChange)} billion`);
-        }
-
-        // Resource changes
-        if (Math.random() < 0.3) { // 30% chance of resource change
-            if (Math.random() < 0.5 && location.resources.length > 1) {
-                const removedResource = location.resources.pop();
-                effects.push(`Lost resource: ${removedResource}`);
-            } else {
-                const newResource = ["Archaeotech", "Warp-tainted artifacts", "Xenos technology", "Rare crystals"][Math.floor(Math.random() * 4)];
-                location.resources.push(newResource);
-                effects.push(`Gained new resource: ${newResource}`);
-            }
-        }
-
-        // Defense changes
-        const defenseChange = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
-        location.defenses = Math.max(0, Math.min(10, location.defenses + defenseChange));
-        if (defenseChange !== 0) {
-            effects.push(`Defenses ${defenseChange > 0 ? 'strengthened' : 'weakened'}`);
-        }
-
-        // Random events
-        if (Math.random() < 0.2) { // 20% chance of random event
-            const events = [
-                "Warp storm erupts",
-                "Tyranid splinter fleet approaches",
-                "Necron tomb awakens",
-                "Ork WAAAGH! gathers",
-                "Eldar Craftworld intervenes"
-            ];
-            const randomEvent = events[Math.floor(Math.random() * events.length)];
-            effects.push(`Random event: ${randomEvent}`);
-        }
-
-        // Log effects
-        if (effects.length > 0) {
-            const effectLog = document.createElement('div');
-            effectLog.classList.add('event');
-            effectLog.innerHTML = `<strong>${location.name}</strong>: ${effects.join(', ')}`;
-            eventList.appendChild(effectLog);
-            eventList.scrollTop = eventList.scrollHeight;
-        }
-
-        // Update location info
-        showLocationInfo(location);
-    }
-
-    function closeInfoPanel() {
-        infoPanel.style.display = 'none';
-    }
-
-    function createShip() {
-        const faction = shipFactionSelect.value;
-        const name = shipNameInput.value;
-
-        if (!name) {
-            alert("Please enter a ship name.");
-            return;
-        }
-
-        const factionColors = {
-            "Imperium": "#1e90ff",
-            "Chaos": "#ff0000",
-            "Genestealer Cults": "#8a2be2",
-            "Orks": "#008000",
-            "Necrons": "#32cd32",
-            "Tau": "#4682b4"
-        };
-
-        const newShip = {
-            name: name,
-            radius: Math.random() * 100 + 150,
-            angle: Math.random() * 2 * Math.PI,
-            speed: Math.random() * 0.0001 + 0.00005,
-            faction: faction,
-            color: factionColors[faction],
-            type: "ship",
-            description: `A newly created ${faction} ship named "${name}".`
-        };
-
-        locations.push(newShip);
-
-        const shipElement = document.createElement('div');
-        shipElement.classList.add('ship');
-        shipElement.style.backgroundColor = newShip.color;
-        shipElement.addEventListener('click', () => showLocationInfo(newShip));
-        shipElement.addEventListener('mouseover', (e) => showPlanetPopup(e, newShip));
-        shipElement.addEventListener('mouseout', hidePlanetPopup);
-        galaxyMap.appendChild(shipElement);
-        newShip.element = shipElement;
-
-        const shipCreationLog = document.createElement('div');
-        shipCreationLog.classList.add('event');
-        shipCreationLog.innerHTML = `<strong>New Ship Created:</strong> ${name} (${faction})`;
-        eventList.appendChild(shipCreationLog);
-        eventList.scrollTop = eventList.scrollHeight;
-
-        shipNameInput.value = "";
-    }
-
-    createStarfield();
-    createLocations();
-    updateLocations();
-
-    closeButton.addEventListener('click', closeInfoPanel);
-    createShipButton.addEventListener('click', createShip);
-    openShipCreationButton.addEventListener('click', () => {
-        infoPanel.style.display = 'block';
-        locationName.textContent = 'Create Ship';
-        locationInfo.innerHTML = '';
-        battleAreas.innerHTML = '';
-        document.getElementById('ship-creation').style.display = 'block';
-    });
+createStarfield();
+createLocations();
+updateLocations();
 </script>
